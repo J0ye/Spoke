@@ -10,29 +10,27 @@ import {
 } from "three";
 import EditorNodeMixin from "./EditorNodeMixin";
 
-export const MediaType = {
-  ALL: "all",
-  ALL_2D: "all-2d",
-  MODEL: "model",
-  IMAGE: "image",
-  VIDEO: "video",
-  PDF: "pdf"
+export const TriggerType = {
+  TELEPORT: "teleport",
+  VISIBILITY: "visibility",
+  SWITCH: "switch active",
+  MEGAPHONE: "megaphone"
 };
 
-export default class MediaFrameNode extends EditorNodeMixin(Object3D) {
-  static legacyComponentName = "media-frame";
+export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
+  static legacyComponentName = "was never a legacy feature trigger frame";
 
-  static nodeName = "Media Frame";
+  static nodeName = "Frame-Trigger";
 
   static _geometry = new BoxBufferGeometry();
 
   constructor(editor) {
     super(editor);
 
-    this.mediaType = MediaType.ALL_2D;
+    this.triggerType = TriggerType.MEGAPHONE;
 
     const box = new Mesh(
-      MediaFrameNode._geometry,
+      FrameTriggerNode._geometry,
       new ShaderMaterial({
         uniforms: {
           opacity: { value: 1 }
@@ -98,7 +96,7 @@ export default class MediaFrameNode extends EditorNodeMixin(Object3D) {
       this.remove(this.helper);
     }
 
-    this.mediaType = source.mediaType;
+    this.triggerType = source.triggerType;
 
     super.copy(source, recursive);
 
@@ -115,25 +113,24 @@ export default class MediaFrameNode extends EditorNodeMixin(Object3D) {
 
   serialize() {
     return super.serialize({
-      "media-frame": {
-        mediaType: this.mediaType
+      "frame-trigger": {
+        triggerType: this.triggerType
       }
     });
   }
 
   static async deserialize(editor, json) {
     const node = await super.deserialize(editor, json);
-    const mediaFrame = json.components.find(c => c.name === "media-frame");
-    node.mediaType = mediaFrame.props.mediaType;
+    const frameTrigger = json.components.find(c => c.name === "frame-trigger");
+    node.triggerType = frameTrigger.props.triggerType;
     return node;
   }
 
   prepareForExport() {
     super.prepareForExport();
     this.remove(this.helper);
-    this.addGLTFComponent("media-frame", {
-      mediaType: this.mediaType,
-      bool: true,
+    this.addGLTFComponent("frame-trigger", {
+      triggerType: this.triggerType,
       bounds: new Vector3().copy(this.scale)
     });
     // We use scale to configure bounds, we don't actually want to set the node's scale

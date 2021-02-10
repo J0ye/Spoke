@@ -5,7 +5,9 @@ import SceneNodeEditor from "./ui/properties/SceneNodeEditor";
 import GroupNode from "./editor/nodes/GroupNode";
 import GroupNodeEditor from "./ui/properties/GroupNodeEditor";
 import ModelNode from "./editor/nodes/ModelNode";
+import BottleNode from "./editor/nodes/BottleNode";
 import ModelNodeEditor from "./ui/properties/ModelNodeEditor";
+import BottleNodeEditor from "./ui/properties/BottleNodeEditor";
 import GroundPlaneNode from "./editor/nodes/GroundPlaneNode";
 import GroundPlaneNodeEditor from "./ui/properties/GroundPlaneNodeEditor";
 import BoxColliderNode from "./editor/nodes/BoxColliderNode";
@@ -52,6 +54,9 @@ import ScenePreviewCameraNodeEditor from "./ui/properties/ScenePreviewCameraNode
 import MediaFrameNode from "./editor/nodes/MediaFrameNode";
 import MediaFrameNodeEditor from "./ui/properties/MediaFrameNodeEditor";
 
+import FrameTriggerNode from "./editor/nodes/FrameTriggerNode";
+import FrameTriggerNodeEditor from "./ui/properties/FrameTriggerNodeEditor";
+
 import SketchfabSource from "./ui/assets/sources/SketchfabSource";
 import PolySource from "./ui/assets/sources/PolySource";
 import BingImagesSource from "./ui/assets/sources/BingImagesSource";
@@ -69,6 +74,7 @@ export function createEditor(api, settings) {
   editor.registerNode(SceneNode, SceneNodeEditor);
   editor.registerNode(GroupNode, GroupNodeEditor);
   editor.registerNode(ModelNode, ModelNodeEditor);
+  editor.registerNode(BottleNode, BottleNodeEditor);
   editor.registerNode(GroundPlaneNode, GroundPlaneNodeEditor);
   editor.registerNode(BoxColliderNode, BoxColliderNodeEditor);
   editor.registerNode(AmbientLightNode, AmbientLightNodeEditor);
@@ -91,6 +97,7 @@ export function createEditor(api, settings) {
   editor.registerNode(SimpleWaterNode, SimpleWaterNodeEditor);
   editor.registerNode(ScenePreviewCameraNode, ScenePreviewCameraNodeEditor);
   editor.registerNode(MediaFrameNode, MediaFrameNodeEditor);
+  editor.registerNode(FrameTriggerNode, FrameTriggerNodeEditor);
 
   editor.registerSource(new ElementsSource(editor));
   editor.registerSource(new MyAssetsSource(editor));

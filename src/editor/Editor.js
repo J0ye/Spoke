@@ -1086,8 +1086,7 @@ export default class Editor extends EventEmitter {
   reparent(object, newParent, newBefore, useHistory = true, emitEvent = true, selectObject = true) {
     if (!object.parent) {
       throw new Error(
-        `${object.nodeName || object.type} "${
-          object.name
+        `${object.nodeName || object.type} "${object.name
         }" has no parent. Reparent only works on objects that are currently in the scene.`
       );
     }
