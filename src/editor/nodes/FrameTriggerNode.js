@@ -28,6 +28,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     super(editor);
 
     this.triggerType = TriggerType.MEGAPHONE;
+    this.target = null;
 
     const box = new Mesh(
       FrameTriggerNode._geometry,
@@ -93,12 +94,16 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
 
   copy(source, recursive = true) {
     if (recursive) {
-      this.remove(this.helper);
+      const helperIndex = source.children.indexOf(source.helper);
+
+      if (helperIndex !== -1) {
+        this.helper = this.children[helperIndex];
+      }
     }
 
-    this.triggerType = source.triggerType;
 
-    super.copy(source, recursive);
+
+    super.copy(source, recursive = true);
 
     if (recursive) {
       const helperIndex = source.children.findIndex(child => child === source.helper);
@@ -107,6 +112,8 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
         this.helper = this.children[helperIndex];
       }
     }
+    this.triggerType = source.triggerType;
+    this.target = source.target;
 
     return this;
   }
@@ -114,15 +121,17 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
   serialize() {
     return super.serialize({
       "frame-trigger": {
-        triggerType: this.triggerType
+        triggerType: this.triggerType,
+        target: this.target
       }
     });
   }
 
   static async deserialize(editor, json) {
     const node = await super.deserialize(editor, json);
-    const frameTrigger = json.components.find(c => c.name === "frame-trigger");
-    node.triggerType = frameTrigger.props.triggerType;
+    const props = json.components.find(c => c.name === "frame-trigger").props;
+    node.triggerType = props.triggerType;
+    node.target = props.target;
     return node;
   }
 
@@ -131,7 +140,8 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     this.remove(this.helper);
     this.addGLTFComponent("frame-trigger", {
       triggerType: this.triggerType,
-      bounds: new Vector3().copy(this.scale)
+      bounds: new Vector3().copy(this.scale),
+      target: this.gltfIndexForUUID(this.target)
     });
     // We use scale to configure bounds, we don't actually want to set the node's scale
     this.scale.setScalar(1);
