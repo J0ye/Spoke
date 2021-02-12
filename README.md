@@ -17,9 +17,11 @@
 
 :tada: **Share**: Invite people to meet in your new space by publishing your content to Hubs immediately. With just a few clicks, you'll have a world of your own to experience and share - all from your browser.
 
+## Install
+You need a linux shell to be able to run a local version of the spoke client. If you are using win10 you can either run Linux in a virtual console or download the ubuntu shell of the win 10 store. After that you need to install node and yarn. Then you will be able to run the development commands. 
+
 ## Development
 
-- `git clone https://github.com/mozilla/Spoke.git`
 - `cd Spoke`
 - `yarn install`
 - `yarn start`
