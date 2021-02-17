@@ -167,7 +167,9 @@ AFRAME.GLTFModelPlus.registerComponent("media-frame", "media-frame", (el, compon
   el.setAttribute("media-frame", componentData);
 });
 
-AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, componentName, componentData, components) => {
+/*AFRAME.GLTFModelPlus.registerComponent(
+  "frame-trigger", "frame-trigger", 
+  (el, componentName, componentData, components) => {
   el.setAttribute("networked", {
     template: "#interactable-media-frame",
     owner: "scene",
@@ -181,14 +183,52 @@ AFRAME.GLTFModelPlus.registerComponent("frame-trigger", "frame-trigger", (el, co
       x: componentData.bounds.x / 2,
       y: componentData.bounds.y / 2,
       z: componentData.bounds.z / 2
-    }
+    },
   });
   el.setAttribute("frame-trigger", componentData);
-  console.log("frame trigger was build with this data:");
-  console.log(componentName);
+  console.log(componentName, "was build with this data:");
   console.log(componentData);
   console.log(components);
-});
+});*/
+AFRAME.GLTFModelPlus.registerComponent(
+  "frame-trigger", "frame-trigger", 
+  (el, componentName, componentData, components, indexToEntityMap) => {
+    const {
+      triggerType,
+      bounds,
+      target,
+      targetID,
+      cMask,
+      switchActive
+    } = componentData;
+
+    let targetEntity;
+
+    try {
+      targetEntity = indexToEntityMap[target];
+
+      if (!targetEntity) {
+        throw new Error(`Couldn't find target entity with index: ${target}.`);
+      }
+    } catch (e) {
+      console.warn(`Error inflating gltf component "trigger-volume": ${e.message}`);
+      return;
+    }
+
+    // Filter out scope and colliders properties.
+    el.setAttribute("frame-trigger", {
+      trigger: triggerType,
+      bounds,
+      target: targetEntity,
+      targetID: targetID,
+      cMask: cMask,
+      switchActive: switchActive
+    });
+    console.log(componentName, "was build with this data:");
+    console.log(componentData);
+    console.log(components);
+  }
+);
 
 AFRAME.GLTFModelPlus.registerComponent("media", "media", (el, componentName, componentData) => {
   if (componentData.id) {

@@ -5,6 +5,7 @@ import { ObjectGroup } from "styled-icons/fa-solid/ObjectGroup";
 import InputGroup from "../inputs/InputGroup";
 import SelectInput from "../inputs/SelectInput";
 import BooleanInput from "../inputs/BooleanInput";
+import NumericInput from "../inputs/NumericInput";
 import StringInput from "../inputs/StringInput";
 import useSetPropertySelected from "./useSetPropertySelected";
 import { TriggerType } from "../../editor/nodes/FrameTriggerNode";
@@ -72,6 +73,16 @@ export default class FrameTriggerNodeEditor extends Component {
     console.log("trigger target is:", target);
   };
 
+  onChangeCollisionMask = cMask => {
+    this.props.editor.setPropertiesSelected({ cMask });
+    console.log("collision mask is:", cMask);
+  };
+
+  onChangeSwitchActive = switchActive => {
+    this.props.editor.setPropertiesSelected({ switchActive });
+    console.log("collision mask is:", switchActive);
+  };
+
   componentDidMount() {
     const options = [];
 
@@ -98,19 +109,47 @@ export default class FrameTriggerNodeEditor extends Component {
 
     return (
       <NodeEditor description={FrameTriggerNodeEditor.description} {...this.props}>
-        <InputGroup name="Target">
-          <SelectInput
-            error={targetNotFound}
-            placeholder={targetNotFound ? "Error missing node." : "Select node..."}
-            value={node.target}
-            onChange={this.onChangeTarget}
-            options={this.state.options}
-            disabled={multiEdit}
-          />
-        </InputGroup>
         <InputGroup name="Trigger Types" info="Define the action of this triggered">
           <SelectInput options={triggerTypeOptions} value={node.triggerType} onChange={this.onChangeTriggerType} />
         </InputGroup>
+        <InputGroup
+          name="Collision Mask"
+          info="Define a mask of the possible layers for a collision."
+        >
+          <NumericInput
+            min={0}
+            max={32}
+            smallStep={1}
+            mediumStep={4}
+            largeStep={8}
+            value={node.cMask}
+            onChange={this.onChangeCollisionMask}
+          />
+        </InputGroup>
+        {node.triggerType !== TriggerType.MEGAPHONE && (
+          // do not ask for a target if it is a megphone trigger
+          <>
+            <InputGroup name="Target">
+              <SelectInput
+                error={targetNotFound}
+                placeholder={targetNotFound ? "Error missing node." : "Select node..."}
+                value={node.target}
+                onChange={this.onChangeTarget}
+                options={this.state.options}
+                disabled={multiEdit}
+              />
+            </InputGroup>
+            {node.triggerType === TriggerType.SWITCH && (
+              // only ask for a switch, if the trigger type is a switch object active type 
+              <>
+                <InputGroup name="New state of target"
+                  info="The state of the target will be set to either active (true) or inactive (false), when the trigger is activated.">
+                  <BooleanInput value={node.switchActive} onChange={this.onChangeSwitchActive} />
+                </InputGroup>
+              </>
+            )}
+          </>
+        )}
       </NodeEditor>
     );
   }
@@ -118,10 +157,6 @@ export default class FrameTriggerNodeEditor extends Component {
 
 /*
 To Do
-Collision Mask für Avatare und Interactables als integer
-Ziel für Teleport als Zielpunkt oder Zielobjekt siehe Trigger Volume
-Switch active Zielobjekt und ob es an oder ausgeschaltet wird
-
 Interactable Button
 Position oder  Canvas für Text anzeigen bei Counter
 */

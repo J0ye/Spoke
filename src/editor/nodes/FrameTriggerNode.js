@@ -18,9 +18,9 @@ export const TriggerType = {
 };
 
 export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
-  static legacyComponentName = "was never a legacy feature trigger frame";
+  static legacyComponentName = "frame-trigger";
 
-  static nodeName = "Frame-Trigger";
+  static nodeName = "Frame Trigger";
 
   static _geometry = new BoxBufferGeometry();
 
@@ -29,6 +29,9 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
 
     this.triggerType = TriggerType.MEGAPHONE;
     this.target = null;
+    this.cMask = 1;
+    this.switchActive = true;
+
 
     const box = new Mesh(
       FrameTriggerNode._geometry,
@@ -114,6 +117,8 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     }
     this.triggerType = source.triggerType;
     this.target = source.target;
+    this.cMask = source.cMask;
+    this.switchActive = source.switchActive;
 
     return this;
   }
@@ -122,7 +127,9 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     return super.serialize({
       "frame-trigger": {
         triggerType: this.triggerType,
-        target: this.target
+        target: this.target,
+        cMask: this.cMask,
+        switchActive: this.switchActive
       }
     });
   }
@@ -132,6 +139,8 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     const props = json.components.find(c => c.name === "frame-trigger").props;
     node.triggerType = props.triggerType;
     node.target = props.target;
+    node.cMask = props.cMask;
+    node.switchActive = props.switchActive;
     return node;
   }
 
@@ -141,7 +150,10 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     this.addGLTFComponent("frame-trigger", {
       triggerType: this.triggerType,
       bounds: new Vector3().copy(this.scale),
-      target: this.gltfIndexForUUID(this.target)
+      target: this.gltfIndexForUUID(this.target),
+      targetID: this.target,
+      cMask: this.cMask,
+      switchActive: this.switchActive
     });
     // We use scale to configure bounds, we don't actually want to set the node's scale
     this.scale.setScalar(1);
