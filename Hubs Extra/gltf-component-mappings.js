@@ -198,6 +198,7 @@ AFRAME.GLTFModelPlus.registerComponent(
       bounds,
       target,
       targetID,
+      targetName,
       cMask,
       switchActive
     } = componentData;
@@ -219,8 +220,9 @@ AFRAME.GLTFModelPlus.registerComponent(
     el.setAttribute("frame-trigger", {
       trigger: triggerType,
       bounds,
-      target: targetEntity,
+      target: target,
       targetID: targetID,
+      targetName: targetName,
       cMask: cMask,
       switchActive: switchActive
     });

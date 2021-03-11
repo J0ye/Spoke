@@ -29,6 +29,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
 
     this.triggerType = TriggerType.MEGAPHONE;
     this.target = null;
+    this.targetName = null;
     this.cMask = 1;
     this.switchActive = true;
 
@@ -117,6 +118,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     }
     this.triggerType = source.triggerType;
     this.target = source.target;
+    this.targetName = source.targetName;
     this.cMask = source.cMask;
     this.switchActive = source.switchActive;
 
@@ -128,6 +130,8 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
       "frame-trigger": {
         triggerType: this.triggerType,
         target: this.target,
+        targetID: this.target,
+        targetName: this.targetName,
         cMask: this.cMask,
         switchActive: this.switchActive
       }
@@ -139,6 +143,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     const props = json.components.find(c => c.name === "frame-trigger").props;
     node.triggerType = props.triggerType;
     node.target = props.target;
+    node.targetName = props.targetName;
     node.cMask = props.cMask;
     node.switchActive = props.switchActive;
     return node;
@@ -152,6 +157,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
       bounds: new Vector3().copy(this.scale),
       target: this.gltfIndexForUUID(this.target),
       targetID: this.target,
+      targetName: this.targetName,
       cMask: this.cMask,
       switchActive: this.switchActive
     });

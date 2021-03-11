@@ -9,6 +9,7 @@ import NumericInput from "../inputs/NumericInput";
 import StringInput from "../inputs/StringInput";
 import useSetPropertySelected from "./useSetPropertySelected";
 import { TriggerType } from "../../editor/nodes/FrameTriggerNode";
+import EditorNodeMixin from "../../editor/nodes/EditorNodeMixin";
 
 const triggerTypeOptions = [
   { label: "Megaphone", value: TriggerType.MEGAPHONE },
@@ -70,7 +71,14 @@ export default class FrameTriggerNodeEditor extends Component {
       leaveProperty: null,
       leaveValue: null
     });
-    console.log("trigger target is:", target);
+    let targetName;
+    for (let i = 0; i < this.state.options.length; i++) {
+      if (this.state.options[i].value === target) {
+        targetName = this.state.options[i].label;
+        console.log("Target: ", targetName);
+      }
+    }
+    this.props.editor.setPropertiesSelected({ targetName });
   };
 
   onChangeCollisionMask = cMask => {
@@ -93,7 +101,6 @@ export default class FrameTriggerNodeEditor extends Component {
         options.push({ label: o.name, value: o.uuid, nodeName: o.nodeName });
       }
     });
-
     this.setState({ options });
   }
 
