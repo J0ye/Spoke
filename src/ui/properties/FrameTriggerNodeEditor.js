@@ -15,26 +15,22 @@ const triggerTypeOptions = [
   { label: "Megaphone", value: TriggerType.MEGAPHONE },
   { label: "Teleport", value: TriggerType.TELEPORT },
   { label: "Visibility (debug)", value: TriggerType.VISIBILITY },
-  { label: "Switch active", value: TriggerType.SWITCH }
+  { label: "Switch active", value: TriggerType.SWITCH },
+  { label: "Snap", value: TriggerType.SNAP },
+  { label: "Audiozone", value: TriggerType.AUDIOZONE }
 ];
 
-const componentOptions = [
-  {
-    label: "video",
-    value: "video",
-    nodeNames: ["Video"],
-    propertyOptions: [{ label: "paused", value: "paused", component: "video", input: BooleanInput, default: false }]
-  },
-  {
-    label: "loop-animation",
-    value: "loop-animation",
-    nodeNames: ["Model"],
-    propertyOptions: [
-      { label: "paused", value: "paused", component: "loop-animation", input: BooleanInput, default: false }
-    ]
-  }
-];
+const CollisionMask = {
+  AVATAR: 1,
+  OBJECT: 2,
+  BOTH: 3,
+};
 
+const collisionMaskOptions = [
+  { label: "Avatar", value: CollisionMask.AVATAR },
+  { label: "Object", value: CollisionMask.OBJECT },
+  { label: "Both", value: CollisionMask.BOTH }
+];
 
 export default class FrameTriggerNodeEditor extends Component {
   static propTypes = {
@@ -86,6 +82,11 @@ export default class FrameTriggerNodeEditor extends Component {
     console.log("collision mask is:", cMask);
   };
 
+  onChangeChannel = channel => {
+    this.props.editor.setPropertiesSelected({ channel });
+    console.log("channel is:", channel);
+  };
+
   onChangeSwitchActive = switchActive => {
     this.props.editor.setPropertiesSelected({ switchActive });
     console.log("collision mask is:", switchActive);
@@ -110,30 +111,36 @@ export default class FrameTriggerNodeEditor extends Component {
     const targetOption = this.state.options.find(o => o.value === node.target);
     const target = targetOption ? targetOption.value : null;
     const targetNotFound = node.target && target === null;
-    const filteredComponentOptions = targetOption
-      ? componentOptions.filter(o => o.nodeNames.indexOf(targetOption.nodeName) !== -1)
-      : [];
 
     return (
       <NodeEditor description={FrameTriggerNodeEditor.description} {...this.props}>
         <InputGroup name="Trigger Types" info="Define the action of this triggered">
           <SelectInput options={triggerTypeOptions} value={node.triggerType} onChange={this.onChangeTriggerType} />
         </InputGroup>
-        <InputGroup
-          name="Collision Mask"
-          info="Define a mask of the possible layers for a collision."
-        >
-          <NumericInput
-            min={0}
-            max={32}
-            smallStep={1}
-            mediumStep={4}
-            largeStep={8}
-            value={node.cMask}
-            onChange={this.onChangeCollisionMask}
-          />
-        </InputGroup>
-        {node.triggerType !== TriggerType.MEGAPHONE && (
+        {node.triggerType !== TriggerType.SNAP && node.triggerType !== TriggerType.AUDIOZONE && (
+          <InputGroup
+            name="Collision Mask"
+            info="Define a mask of the possible layers for a collision."
+          >
+            <SelectInput options={collisionMaskOptions} value={node.cMask} onChange={this.onChangeCollisionMask} />
+          </InputGroup>
+        )}
+        {node.triggerType === TriggerType.AUDIOZONE && (
+          <InputGroup
+            name="Channel"
+            info="Define an audio channel"
+          >
+            <NumericInput
+              min={1}
+              smallStep={1}
+              mediumStep={4}
+              largeStep={8}
+              value={node.channel}
+              onChange={this.onChangeChannel}
+            />
+          </InputGroup>
+        )}
+        {node.triggerType !== TriggerType.MEGAPHONE && node.triggerType !== TriggerType.SNAP && node.triggerType !== TriggerType.AUDIOZONE && (
           // do not ask for a target if it is a megphone trigger
           <>
             <InputGroup name="Target">

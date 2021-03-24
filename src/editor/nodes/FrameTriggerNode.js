@@ -14,7 +14,9 @@ export const TriggerType = {
   TELEPORT: "teleport",
   VISIBILITY: "visibility",
   SWITCH: "switch active",
-  MEGAPHONE: "megaphone"
+  MEGAPHONE: "megaphone",
+  SNAP: "snap",
+  AUDIOZONE: "audiozone"
 };
 
 export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
@@ -31,6 +33,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     this.target = null;
     this.targetName = null;
     this.cMask = 1;
+    this.channel = 1;
     this.switchActive = true;
 
 
@@ -98,16 +101,10 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
 
   copy(source, recursive = true) {
     if (recursive) {
-      const helperIndex = source.children.indexOf(source.helper);
-
-      if (helperIndex !== -1) {
-        this.helper = this.children[helperIndex];
-      }
+      this.remove(this.helper);
     }
 
-
-
-    super.copy(source, recursive = true);
+    super.copy(source, recursive);
 
     if (recursive) {
       const helperIndex = source.children.findIndex(child => child === source.helper);
@@ -120,6 +117,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     this.target = source.target;
     this.targetName = source.targetName;
     this.cMask = source.cMask;
+    this.channel = source.channel;
     this.switchActive = source.switchActive;
 
     return this;
@@ -133,6 +131,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
         targetID: this.target,
         targetName: this.targetName,
         cMask: this.cMask,
+        channel: this.channel,
         switchActive: this.switchActive
       }
     });
@@ -145,6 +144,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     node.target = props.target;
     node.targetName = props.targetName;
     node.cMask = props.cMask;
+    node.channel = props.channel;
     node.switchActive = props.switchActive;
     return node;
   }
@@ -159,6 +159,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
       targetID: this.target,
       targetName: this.targetName,
       cMask: this.cMask,
+      channel: this.channel,
       switchActive: this.switchActive
     });
     // We use scale to configure bounds, we don't actually want to set the node's scale

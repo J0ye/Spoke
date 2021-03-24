@@ -200,6 +200,7 @@ AFRAME.GLTFModelPlus.registerComponent(
       targetID,
       targetName,
       cMask,
+      channel,
       switchActive
     } = componentData;
 
@@ -213,7 +214,6 @@ AFRAME.GLTFModelPlus.registerComponent(
       }
     } catch (e) {
       console.warn(`Error inflating gltf component "trigger-volume": ${e.message}`);
-      return;
     }
 
     // Filter out scope and colliders properties.
@@ -224,6 +224,7 @@ AFRAME.GLTFModelPlus.registerComponent(
       targetID: targetID,
       targetName: targetName,
       cMask: cMask,
+      channel: channel,
       switchActive: switchActive
     });
     console.log(componentName, "was build with this data:");
@@ -241,6 +242,8 @@ AFRAME.GLTFModelPlus.registerComponent("media", "media", (el, componentName, com
       networkId: componentData.id
     });
   }
+
+  console.log("Building medida frame");
 
   const mediaLoaderAttributes = {
     src: componentData.src,
