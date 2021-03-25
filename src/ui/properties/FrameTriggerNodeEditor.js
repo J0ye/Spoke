@@ -22,8 +22,8 @@ const triggerTypeOptions = [
 
 const CollisionMask = {
   AVATAR: 1,
-  OBJECT: 2,
-  BOTH: 3,
+  OBJECT: 4,
+  BOTH: 5,
 };
 
 const collisionMaskOptions = [
@@ -58,15 +58,7 @@ export default class FrameTriggerNodeEditor extends Component {
   };
 
   onChangeTarget = target => {
-    this.props.editor.setPropertiesSelected({
-      target,
-      enterComponent: null,
-      enterProperty: null,
-      enterValue: null,
-      leaveComponent: null,
-      leaveProperty: null,
-      leaveValue: null
-    });
+    this.props.editor.setPropertiesSelected({ target });
     let targetName;
     for (let i = 0; i < this.state.options.length; i++) {
       if (this.state.options[i].value === target) {

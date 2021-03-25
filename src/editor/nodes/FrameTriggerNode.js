@@ -164,6 +164,7 @@ export default class FrameTriggerNode extends EditorNodeMixin(Object3D) {
     });
     // We use scale to configure bounds, we don't actually want to set the node's scale
     this.scale.setScalar(1);
+    console.log("Exporting with target: " + this.targetName);
     this.addGLTFComponent("networked", {
       id: this.uuid
     });
