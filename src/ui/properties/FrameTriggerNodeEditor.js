@@ -21,8 +21,8 @@ const triggerTypeOptions = [
 ];
 
 const CollisionMask = {
-  AVATAR: 1,
-  OBJECT: 4,
+  AVATAR: 4,
+  OBJECT: 1,
   BOTH: 5,
 };
 
